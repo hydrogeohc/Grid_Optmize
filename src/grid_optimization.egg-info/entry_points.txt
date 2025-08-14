@@ -1,9 +1,0 @@
-[console_scripts]
-grid-server = grid_optimization.src.server:main
-
-[nat.functions]
-nat_grid_optimization/optimize_grid = grid_optimization.src.nat_toolkit.register:legacy_optimize_grid
-nat_grid_optimization/show_last_optimization = grid_optimization.src.nat_toolkit.register:legacy_show_last_optimization
-
-[nat.toolkit]
-grid_optimization = grid_optimization.src.nat_toolkit.register
