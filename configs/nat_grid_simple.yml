@@ -6,8 +6,8 @@ general:
 
 # Basic built-in functions
 functions:
-  current_datetime:
-    _type: current_datetime
+  code_execution:
+    _type: code_execution
     
 # LLM configuration
 llms:
@@ -17,15 +17,6 @@ llms:
     temperature: 0.1
     max_tokens: 2048
 
-# Simple workflow configuration
+# Simple workflow configuration using just tools
 workflow:
-  _type: react_agent
-  tool_names:
-    - current_datetime
-  llm_name: grid_optimization_llm
-  verbose: true
-  parse_agent_response_max_retries: 3
-  system_message: |
-    You are a grid optimization assistant. You help users with electrical grid optimization tasks.
-    Currently, you have access to basic datetime functionality. You can provide general guidance
-    on grid optimization principles, supply-demand balancing, and loss minimization strategies.
+  _type: code_execution

@@ -11,10 +11,28 @@ import json
 from typing import Dict, Any, Optional
 from datetime import datetime
 
-from nat.builder.builder import Builder
-from nat.builder.function_info import FunctionInfo
-from nat.cli.register_workflow import register_function
-from nat.data_models.function import FunctionBaseConfig
+try:
+    from aiq.builder.builder import Builder
+    from aiq.builder.function_info import FunctionInfo
+    from aiq.cli.register_workflow import register_function
+    from aiq.data_models.function import FunctionBaseConfig
+except ImportError:
+    # Create mock classes for development/testing
+    class Builder:
+        pass
+    
+    class FunctionInfo:
+        @staticmethod
+        def from_fn(func, description=""):
+            return func
+    
+    def register_function(config_type):
+        def decorator(func):
+            return func
+        return decorator
+    
+    class FunctionBaseConfig:
+        pass
 
 logger = logging.getLogger(__name__)
 

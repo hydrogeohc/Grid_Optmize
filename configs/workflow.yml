@@ -29,67 +29,10 @@ llms:
 
 # NAT Grid Optimization Functions
 functions:
-  # Core grid optimization
-  grid_optimize:
-    _type: grid_optimize
-    description: "Advanced grid optimization with comprehensive analysis"
-
-  # Grid monitoring and status
-  grid_status:
-    _type: grid_status
-    description: "Real-time grid monitoring and status reporting"
-    
-  # Grid performance analysis
-  grid_analyze:
-    _type: grid_analyze
-    description: "Performance analysis with trends and predictive insights"
-    
-  # Legacy compatibility functions (backward compatibility)
-  "nat_grid_optimization/optimize_grid":
-    _type: "nat_grid_optimization/optimize_grid"
-    description: "Legacy grid optimization function"
-    
-  "nat_grid_optimization/show_last_optimization":
-    _type: "nat_grid_optimization/show_last_optimization"
-    description: "Legacy optimization results display"
-
-  # Utility functions
   current_datetime:
     _type: current_datetime
-    description: "Get current date and time for timestamping operations"
+    description: "Get current date and time for grid optimization timestamping"
 
-# Main Workflow Definition - React Agent
+# Main Workflow Definition
 workflow:
-  _type: react_agent
-  tool_names:
-    - grid_optimize
-    - grid_status
-    - grid_analyze
-    - current_datetime
-  llm_name: grid_llm
-  max_iterations: 8
-  verbose: true
-  parse_agent_response_max_retries: 3
-  
-  # Grid-specific system message
-  system_message: |
-    You are a specialized AI agent for power grid optimization and management using the NVIDIA NeMo Agent Toolkit.
-    
-    Your capabilities include:
-    - Power grid optimization to minimize losses and improve efficiency
-    - Real-time grid monitoring and status reporting
-    - Performance analysis and trend identification
-    - Safety-first approach with regulatory compliance
-    
-    When handling grid optimization requests:
-    1. Always prioritize grid stability and safety
-    2. Provide clear explanations of optimization actions
-    3. Include relevant metrics and performance indicators
-    4. Consider both immediate and long-term impacts
-    5. Use appropriate tools for each type of request
-    
-    Available tools:
-    - grid_optimize: Perform optimization for specific regions
-    - grid_status: Check current operational status
-    - grid_analyze: Analyze performance metrics and trends
-    - current_datetime: Get timestamps for operations
+  _type: current_datetime
