@@ -1,0 +1,31 @@
+# Simplified NAT configuration for Grid Optimization System
+# Using built-in tools first, then we can add custom ones
+
+general:
+  use_uvloop: true
+
+# Basic built-in functions
+functions:
+  current_datetime:
+    _type: current_datetime
+    
+# LLM configuration
+llms:
+  grid_optimization_llm:
+    _type: openai
+    model_name: gpt-4
+    temperature: 0.1
+    max_tokens: 2048
+
+# Simple workflow configuration
+workflow:
+  _type: react_agent
+  tool_names:
+    - current_datetime
+  llm_name: grid_optimization_llm
+  verbose: true
+  parse_agent_response_max_retries: 3
+  system_message: |
+    You are a grid optimization assistant. You help users with electrical grid optimization tasks.
+    Currently, you have access to basic datetime functionality. You can provide general guidance
+    on grid optimization principles, supply-demand balancing, and loss minimization strategies.

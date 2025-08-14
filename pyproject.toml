@@ -1,0 +1,101 @@
+[project]
+name = "grid-optimization"
+version = "1.0.0"
+description = "AI-powered grid optimization system with NVIDIA NeMo Agent Toolkit integration"
+authors = [
+    {name = "Grid Optimization Team"}
+]
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "sqlalchemy>=2.0.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.11.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    "asyncio-compat",
+    "nvidia-aiq-toolkit>=1.0.0"
+]
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+readme = "README.md"
+keywords = ["grid", "optimization", "ai", "nvidia", "nat", "agent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment", 
+    "Framework :: FastAPI",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Power (UPS)"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0"
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+    "myst-parser>=2.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/grid-optimization/grid-optimization"
+Documentation = "https://grid-optimization.readthedocs.io/"
+Repository = "https://github.com/grid-optimization/grid-optimization"
+Issues = "https://github.com/grid-optimization/grid-optimization/issues"
+
+[project.scripts]
+grid-server = "grid_optimization.src.server:main"
+
+[project.entry-points."nat.toolkit"]
+grid_optimization = "grid_optimization.src.nat_toolkit.register"
+
+# Legacy compatibility entry points
+[project.entry-points."nat.functions"]
+"nat_grid_optimization/optimize_grid" = "grid_optimization.src.nat_toolkit.register:legacy_optimize_grid"
+"nat_grid_optimization/show_last_optimization" = "grid_optimization.src.nat_toolkit.register:legacy_show_last_optimization"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["grid_optimization"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short --cov=src --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true

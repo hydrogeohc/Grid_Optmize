@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024-2025, Grid Optimization Project  
+# SPDX-License-Identifier: Apache-2.0
+
+general:
+  use_uvloop: true
+
+# Large Language Models Configuration
+llms:
+  # Primary LLM for grid optimization
+  grid_llm:
+    _type: openai
+    model_name: gpt-4o
+    max_tokens: 4096
+    temperature: 0.1
+    
+  # Backup LLM for fallback scenarios  
+  backup_llm:
+    _type: openai
+    model_name: gpt-3.5-turbo
+    max_tokens: 2048
+    temperature: 0.1
+    
+  # NVIDIA NIM LLM option (requires NVIDIA API key)
+  nim_llm:
+    _type: nim
+    model_name: meta/llama-3.1-70b-instruct
+    temperature: 0.0
+    max_tokens: 2048
+
+# Custom Grid Optimization Functions
+functions:
+  # Core grid optimization function
+  grid_optimize:
+    _type: grid_optimize
+    description: "Optimize power grid configuration for a region to minimize losses"
+    
+  # Grid status and monitoring  
+  grid_status:
+    _type: grid_status
+    description: "Get current grid status, load, and optimization history"
+    
+  # Grid performance analysis
+  grid_analyze:
+    _type: grid_analyze
+    description: "Analyze grid performance metrics and trends"
+    
+  # Built-in datetime function for timestamping
+  current_datetime:
+    _type: current_datetime
+
+# Main Workflow Configuration
+workflow:
+  _type: react_agent
+  tool_names:
+    - grid_optimize
+    - grid_status  
+    - grid_analyze
+    - current_datetime
+  llm_name: grid_llm
+  max_iterations: 8
+  verbose: true
+  parse_agent_response_max_retries: 3
+  
+  # Grid-specific agent configuration
+  system_message: |
+    You are a specialized AI agent for power grid optimization and management. 
+    
+    Your expertise includes:
+    - Power system optimization and load balancing
+    - Grid infrastructure analysis and maintenance
+    - Energy efficiency improvements and loss reduction
+    - Real-time monitoring and alerting
+    - Regulatory compliance and safety protocols
+    
+    When responding to grid optimization requests:
+    1. Always prioritize safety and regulatory compliance
+    2. Provide clear, actionable recommendations
+    3. Include relevant metrics and performance indicators
+    4. Explain the reasoning behind optimization decisions
+    5. Consider environmental and economic impacts
+    
+    Use the available tools to analyze grid conditions, perform optimizations, 
+    and provide comprehensive status reports.

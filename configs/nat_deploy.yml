@@ -1,0 +1,31 @@
+# NAT Deployment Configuration for Grid Optimization
+# Using tool_calling_agent for better compatibility
+
+general:
+  use_uvloop: true
+
+# Basic built-in functions
+functions:
+  current_datetime:
+    _type: current_datetime
+    
+# LLM configuration - using a mock LLM to avoid API key requirement
+llms:
+  grid_optimization_llm:
+    _type: openai
+    model_name: gpt-3.5-turbo
+    temperature: 0.1
+    max_tokens: 1024
+    api_key: "dummy-key"  # We'll use this for demo purposes
+
+# Tool calling workflow (more stable than react agent)
+workflow:
+  _type: tool_calling_agent
+  tool_names:
+    - current_datetime
+  llm_name: grid_optimization_llm
+  verbose: true
+  system_message: |
+    You are a grid optimization assistant. You help users with electrical grid optimization tasks.
+    You can provide information about current time and general guidance on grid optimization
+    principles including supply-demand balancing and loss minimization strategies.
