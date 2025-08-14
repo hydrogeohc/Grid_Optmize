@@ -1,34 +1,27 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024-2025, Grid Optimization Team. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# NAT-compatible configuration for Grid Optimization System
+# Advanced Grid Optimization Configuration
+# Comprehensive NAT configuration with multiple grid optimization functions  
+# Status: ⚠️ Requires OpenAI API key for LLM features
+# Features: optimize_grid, show_last_optimization, current_datetime
 
 general:
   use_uvloop: true
 
-# Grid optimization functions (tools)
+# Available functions
 functions:
-  optimize_grid:
-    _type: nat_grid_optimization/optimize_grid
-  show_last_optimization:
-    _type: nat_grid_optimization/show_last_optimization
   current_datetime:
     _type: current_datetime
+  optimize_grid:
+    _type: nat_toolkit/optimize_grid
+  show_last_optimization:
+    _type: nat_toolkit/show_last_optimization
 
 # LLM configuration for grid optimization agents
 llms:
   grid_optimization_llm:
-    _type: nim
-    model_name: meta/llama-3.1-70b-instruct
-    temperature: 0.1  # Low temperature for consistent optimization decisions
-    max_tokens: 2048
-  
-  # Fallback to OpenAI if NIM not available
-  openai_llm:
     _type: openai
-    model_name: gpt-4
+    model_name: gpt-4o-mini
     temperature: 0.1
-    max_tokens: 2048
+    max_tokens: 1024
 
 # Main workflow configuration
 workflow:
@@ -39,51 +32,10 @@ workflow:
     - current_datetime
   llm_name: grid_optimization_llm
   verbose: true
-  parse_agent_response_max_retries: 3
   system_message: |
-    You are a grid optimization assistant. You help users optimize electrical grid supply 
-    and demand to minimize losses. You can:
-    
+    You are a comprehensive grid optimization assistant. You can:
     1. Optimize grid supply for any region using optimize_grid
     2. Show the latest optimization results using show_last_optimization
-    3. Provide analysis and recommendations based on the optimization results
+    3. Provide analysis and recommendations
     
-    Always explain your reasoning and provide clear recommendations. When optimizing,
-    consider factors like supply-demand balance, grid losses, and regional constraints.
-
-# API server configuration for serving the workflow
-api_server:
-  host: "0.0.0.0"
-  port: 8001  # Different port from your existing server
-  cors:
-    allow_origins: ["*"]
-    allow_methods: ["GET", "POST"]
-    allow_headers: ["*"]
-
-# Front end configuration
-front_ends:
-  console:
-    _type: console
-    enable_logging: true
-  
-  fastapi:
-    _type: fastapi
-    enable_logging: true
-    title: "Grid Optimization NAT API"
-    description: "AI-powered grid optimization using NeMo Agent Toolkit"
-    version: "1.0.0"
-
-# Observability and monitoring
-observability:
-  enable_telemetry: true
-  telemetry_exporters:
-    console:
-      _type: console
-      log_level: INFO
-
-# Memory configuration (optional)
-memory:
-  _type: redis
-  host: localhost
-  port: 6379
-  db: 0
+    Available regions: us-west, us-east, us-central, pgae

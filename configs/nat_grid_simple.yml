@@ -1,22 +1,36 @@
-# Simplified NAT configuration for Grid Optimization System
-# Using built-in tools first, then we can add custom ones
+# Simple Grid Optimization Configuration
+# Basic NAT setup with minimal configuration for quick testing
+# Status: ⚠️ Requires OpenAI API key for LLM features  
+# Features: current_datetime, optimize_grid
 
 general:
   use_uvloop: true
 
-# Basic built-in functions
+# Functions available
 functions:
-  code_execution:
-    _type: code_execution
+  current_datetime:
+    _type: current_datetime
+    description: "Get current date and time"
+  optimize_grid:
+    _type: nat_toolkit/optimize_grid
+    description: "Optimize power grid for specified region"
     
 # LLM configuration
 llms:
   grid_optimization_llm:
     _type: openai
-    model_name: gpt-4
+    model_name: gpt-4o-mini
     temperature: 0.1
-    max_tokens: 2048
+    max_tokens: 1024
 
-# Simple workflow configuration using just tools
+# Simple workflow configuration
 workflow:
-  _type: code_execution
+  _type: react_agent
+  tool_names:
+    - current_datetime
+    - optimize_grid
+  llm_name: grid_optimization_llm
+  verbose: true
+  system_message: |
+    You are a simple grid optimization assistant. Always start by checking the current time, then optimize power grids.
+    Available regions: us-west, us-east, us-central, pgae

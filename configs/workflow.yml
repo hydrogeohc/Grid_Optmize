@@ -1,5 +1,7 @@
-# Unified NVIDIA NeMo Agent Toolkit Configuration
-# Combined NAT Grid Toolkit and Workflow for comprehensive grid optimization
+# Primary Grid Optimization Configuration
+# NVIDIA NeMo Agent Toolkit workflow with grid optimization functions
+# Status: ⚠️ Requires OpenAI API key for LLM features
+# Alternative: Use run_grid_optimization.py for direct access
 
 general:
   use_uvloop: true
@@ -27,12 +29,24 @@ llms:
     temperature: 0.0
     max_tokens: 2048
 
-# NAT Grid Optimization Functions
+# Available Functions
 functions:
   current_datetime:
     _type: current_datetime
     description: "Get current date and time for grid optimization timestamping"
+  optimize_grid:
+    _type: nat_toolkit/optimize_grid
+    description: "Optimize power grid for specified region"
 
-# Main Workflow Definition
+# Main Workflow Definition  
 workflow:
-  _type: current_datetime
+  _type: react_agent
+  tool_names:
+    - optimize_grid
+    - current_datetime
+  llm_name: grid_llm
+  verbose: true
+  system_message: |
+    You are a grid optimization assistant. Help users optimize power grids for different regions.
+    Use optimize_grid to perform optimizations and current_datetime for timestamping.
+    Available regions: us-west, us-east, us-central, pgae

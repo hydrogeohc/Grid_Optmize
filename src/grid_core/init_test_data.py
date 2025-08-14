@@ -3,7 +3,7 @@ Initialize test data for the Grid Optimization system.
 This creates sample grid state data for testing purposes.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from .db import get_engine, create_tables, get_session, GridState
 
 
@@ -26,7 +26,7 @@ def init_test_data():
     ]
     
     # Add data with timestamps spread over the last few days
-    base_time = datetime.utcnow() - timedelta(days=2)
+    base_time = datetime.now(UTC) - timedelta(days=2)
     
     for i, data in enumerate(test_data):
         # Add multiple entries for each region to simulate time series data

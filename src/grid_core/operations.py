@@ -1,7 +1,14 @@
+"""
+Grid optimization operations using SciPy for power loss minimization.
+
+This module provides the core optimization algorithms for the grid optimization system,
+including supply optimization and result storage functionality.
+"""
+
 from .db import get_engine, get_session, GridState, OptimizationResult
 from scipy.optimize import minimize
 
-# Simple tool registry replacement for when AIQ toolkit is not available
+
 def register_tool(name):
     """Simple decorator to register tools without AIQ toolkit dependency."""
     def decorator(func):
