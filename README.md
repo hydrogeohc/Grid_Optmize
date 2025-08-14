@@ -10,14 +10,6 @@
 
 ---
 
-> **🎉 UNIFIED VERSION!** This README covers both the original development structure and the production-ready clean version.
-> 
-> **📂 Original Structure**: `/Users/hydrogeo/Downloads/Grid_optimization/` - Development and NAT integration
-> 
-> **✨ Clean Structure**: `/Users/hydrogeo/Downloads/Grid_optimization_clean/grid_optimization/` - Production ready
-> 
-> **Quick Start**: Choose your version and run the appropriate test commands below!
-
 ## 📖 Overview
 
 **GridOpt** is a state-of-the-art power grid optimization system that leverages AI agents to revolutionize energy management. By integrating the **NVIDIA NeMo Agent Toolkit (NAT)** with advanced optimization algorithms, it delivers:
