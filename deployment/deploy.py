@@ -14,8 +14,8 @@ import sys
 import os
 
 # Import your existing grid optimization functions
-sys.path.append(os.path.dirname(__file__))
-from grid_ops.tools.grid_tools import optimize_grid, show_last_optimization
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.grid_core.tools.grid_tools import optimize_grid, show_last_optimization
 
 app = FastAPI(
     title="Grid Optimization API",

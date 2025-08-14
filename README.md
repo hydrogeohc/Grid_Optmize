@@ -52,7 +52,7 @@ python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
 # Install dependencies
-pip install -e .
+uv pip install -e .
 
 # Initialize database
 python -c "from src.grid_core.db import init_db; init_db()"
@@ -77,7 +77,7 @@ docker-compose -f deployment/docker-compose.yml up -d
 
 ```bash
 # Install NVIDIA NeMo Agent Toolkit
-pip install aiqtoolkit
+uv pip install aiqtoolkit
 
 # Basic grid optimization
 aiq run --config_file configs/workflow.yml \
@@ -270,7 +270,7 @@ curl http://localhost:8000/health
 ```bash
 # Setup and Testing (Production Ready)
 python -m venv .venv && source .venv/bin/activate
-pip install -e .
+uv pip install -e .
 python -c "from src.grid_core.db import init_db; init_db()"
 python test_core.py                    # Complete system test
 

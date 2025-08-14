@@ -1,12 +1,16 @@
 # Use Python 3.11 for NeMo Agent Toolkit compatibility
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies including uv
 RUN apt-get update && apt-get install -y \
     git \
     git-lfs \
     curl \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh \
     && rm -rf /var/lib/apt/lists/*
+
+# Add uv to PATH
+ENV PATH="/root/.cargo/bin:$PATH"
 
 # Set working directory
 WORKDIR /app
@@ -19,7 +23,7 @@ COPY pyproject.toml ./
 COPY requirements.txt ./
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system --no-cache -r requirements.txt
 
 # Copy configuration files first
 COPY config.yml ./

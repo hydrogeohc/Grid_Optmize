@@ -115,7 +115,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 COPY . .
-RUN pip install -r requirements.txt
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    /root/.cargo/bin/uv pip install --system -r requirements.txt
 EXPOSE 8001
 
 CMD ["python", "deploy.py"]
