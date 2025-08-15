@@ -4,16 +4,16 @@ Grid Optimization API Server
 FastAPI-based REST API for the grid optimization system.
 """
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from datetime import datetime
-import uvicorn
 
-from .routes import grid, health
-from ..core.models import ErrorResponse
-from ..utils.logging import setup_logging, get_logger
+import uvicorn
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from ..utils.config import get_config
+from ..utils.logging import get_logger, setup_logging
+from .routes import grid, health
 
 # Setup logging
 setup_logging()
@@ -23,26 +23,27 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager for startup/shutdown."""
-    
+
     # Startup
     logger.info("🚀 Starting Grid Optimization API Server...")
     try:
         # Load configuration
         config = get_config()
         logger.info(f"📋 Configuration loaded - Environment: {config.environment}")
-        
+
         # Initialize database
         from ..core.database import get_engine
-        engine = get_engine()
+
+        get_engine()
         logger.info("🗄️  Database connection established")
-        
+
         logger.info("✅ Grid Optimization API Server started successfully")
     except Exception as e:
         logger.error(f"❌ Failed to start server: {e}")
         raise
-    
+
     yield
-    
+
     # Shutdown
     logger.info("🔄 Shutting down Grid Optimization API Server...")
     logger.info("✅ Server shutdown complete")
@@ -55,7 +56,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # Get configuration
@@ -79,7 +80,7 @@ async def http_exception_handler(request, exc):
         "error": "HTTP Error",
         "message": exc.detail,
         "status_code": exc.status_code,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
 
@@ -90,7 +91,7 @@ async def general_exception_handler(request, exc):
     return {
         "error": "Internal Server Error",
         "message": "An unexpected error occurred",
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
 
@@ -110,7 +111,7 @@ async def root():
         "docs": "/docs",
         "redoc": "/redoc",
         "health": "/health",
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
 
 
@@ -124,7 +125,7 @@ async def api_info():
             "name": "Grid Optimization API",
             "version": "1.0.0",
             "environment": config.environment,
-            "debug": config.debug
+            "debug": config.debug,
         },
         "endpoints": {
             "grid_optimization": "/grid/optimize",
@@ -132,32 +133,32 @@ async def api_info():
             "available_regions": "/grid/regions",
             "optimization_history": "/grid/history/{region}",
             "health_check": "/health",
-            "api_docs": "/docs"
+            "api_docs": "/docs",
         },
         "available_regions": ["us-west", "us-east", "us-central", "pgae"],
         "features": [
             "Real-time grid optimization",
-            "Multi-region support", 
+            "Multi-region support",
             "Async optimization jobs",
             "Historical data tracking",
             "Health monitoring",
-            "NAT toolkit integration"
-        ]
+            "NAT toolkit integration",
+        ],
     }
 
 
 def main():
     """Main entry point for running the server."""
     config = get_config()
-    
+
     logger.info(f"🌐 Starting server on {config.api.host}:{config.api.port}")
-    
+
     uvicorn.run(
         "grid_optimization.api.server:app",
         host=config.api.host,
         port=config.api.port,
         reload=config.api.reload,
-        log_level="info" if config.debug else "warning"
+        log_level="info" if config.debug else "warning",
     )
 
 

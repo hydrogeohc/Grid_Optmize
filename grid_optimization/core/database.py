@@ -1,11 +1,13 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
+from datetime import UTC, datetime
+
+from sqlalchemy import Column, DateTime, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from datetime import datetime, UTC
 
 Base = declarative_base()
 
+
 class GridState(Base):
-    __tablename__ = 'grid_state'
+    __tablename__ = "grid_state"
     id = Column(Integer, primary_key=True)
     region = Column(String)
     demand = Column(Float)
@@ -15,8 +17,9 @@ class GridState(Base):
     efficiency = Column(Float, default=85.0)
     timestamp = Column(DateTime, default=lambda: datetime.now(UTC))
 
+
 class OptimizationResult(Base):
-    __tablename__ = 'optimization_result'
+    __tablename__ = "optimization_result"
     id = Column(Integer, primary_key=True)
     region = Column(String)
     optimized_supply = Column(Float)
@@ -24,15 +27,19 @@ class OptimizationResult(Base):
     losses = Column(Float)
     timestamp = Column(DateTime, default=lambda: datetime.now(UTC))
 
+
 def get_engine(db_url="sqlite:///gridopt.db"):
     return create_engine(db_url)
+
 
 def create_tables(engine):
     Base.metadata.create_all(engine)
 
+
 def get_session(engine):
     Session = sessionmaker(bind=engine)
     return Session()
+
 
 def init_db(db_url="sqlite:///gridopt.db"):
     engine = get_engine(db_url)

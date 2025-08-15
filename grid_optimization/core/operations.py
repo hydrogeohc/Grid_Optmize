@@ -5,16 +5,20 @@ This module provides the core optimization algorithms for the grid optimization 
 including supply optimization and result storage functionality.
 """
 
-from .database import get_engine, get_session, GridState, OptimizationResult
 from scipy.optimize import minimize
+
+from .database import GridState, OptimizationResult, get_engine, get_session
 
 
 def register_tool(name):
     """Simple decorator to register tools without AIQ toolkit dependency."""
+
     def decorator(func):
         func._tool_name = name
         return func
+
     return decorator
+
 
 @register_tool("optimize_grid")
 def optimize_grid(region=None):
@@ -69,6 +73,7 @@ def optimize_grid(region=None):
         "optimized_demand": demand,
         "losses": losses,
     }
+
 
 @register_tool("get_latest_optimization")
 def get_latest_optimization(region=None):
