@@ -41,12 +41,8 @@ try:
     import sys
     from pathlib import Path
     
-    # Add the parent directory to sys.path to find grid_core
-    current_dir = Path(__file__).parent
-    src_dir = current_dir.parent
-    sys.path.insert(0, str(src_dir))
-    
-    from grid_core.operations import optimize_grid, get_latest_optimization
+    # Import from the reorganized package structure
+    from ...core.operations import optimize_grid, get_latest_optimization
     GRID_MODULES_AVAILABLE = True
     logger.info("Grid optimization modules loaded successfully")
     

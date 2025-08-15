@@ -20,7 +20,7 @@ echo "us-west" | python scripts/run_grid_optimization.py
 # Direct Python API
 python -c "
 import sys; sys.path.insert(0, 'src')
-from grid_core.operations import optimize_grid
+from grid_optimization.core.operations import optimize_grid
 print(optimize_grid('us-west'))
 "
 ```
@@ -61,9 +61,9 @@ echo "us-west" | python scripts/run_grid_optimization.py
 ```bash
 export OPENAI_API_KEY="your-key"  # For NAT features
 # OR
-python -c "import sys; sys.path.insert(0, 'src'); from grid_core.operations import optimize_grid; print(optimize_grid('us-west'))"
+python -c "import sys; sys.path.insert(0, '.'); from grid_optimization.core.operations import optimize_grid; print(optimize_grid('us-west'))"
 ```
 
 ## Technical Details
 
-This module registers NAT functions via entry points in `pyproject.toml` and provides async wrappers around the core grid optimization functions in `../grid_core/operations.py`. The NAT integration requires an OpenAI API key for LLM functionality, while the core optimization algorithms work independently.
+This module registers NAT functions via entry points in `pyproject.toml` and provides async wrappers around the core grid optimization functions in `../core/operations.py`. The NAT integration requires an OpenAI API key for LLM functionality, while the core optimization algorithms work independently.

@@ -1,0 +1,23 @@
+# No-LLM AIQ Configuration for Grid Optimization  
+# Bypasses LLM issues by using direct function calls
+
+general:
+  use_uvloop: true
+
+# Available functions (no LLM needed)
+functions:
+  current_datetime:
+    _type: current_datetime
+  optimize_grid:
+    _type: optimize_grid
+  show_last_optimization:
+    _type: show_last_optimization
+
+# Try a tool-only workflow without LLM
+workflow:
+  _type: tool_calling_agent
+  tool_names:
+    - optimize_grid
+    - show_last_optimization
+    - current_datetime
+  verbose: true

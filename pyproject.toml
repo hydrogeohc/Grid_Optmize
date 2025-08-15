@@ -57,18 +57,21 @@ Repository = "https://github.com/grid-optimization/grid-optimization"
 Issues = "https://github.com/grid-optimization/grid-optimization/issues"
 
 [project.scripts]
-grid-server = "grid_optimization.src.server:main"
+grid-optimize = "grid_optimization.cli.commands:main"
+grid-server = "grid_optimization.api.server:main"
 
-[project.entry-points."aiq.functions"]
-"nat_toolkit/optimize_grid" = "nat_toolkit.register:LegacyOptimizeGridConfig"
-"nat_toolkit/show_last_optimization" = "nat_toolkit.register:LegacyShowOptimizationConfig"
+[project.entry-points."aiq.components"]
+"nat_toolkit/optimize_grid" = "grid_optimization.integrations.nat.register:LegacyOptimizeGridConfig"
+"nat_toolkit/show_last_optimization" = "grid_optimization.integrations.nat.register:LegacyShowOptimizationConfig"
 
 [build-system]
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["grid_optimization*"]
+exclude = ["src*", "tests*"]
 
 [tool.black]
 line-length = 100

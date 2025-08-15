@@ -1,75 +1,61 @@
+"""
+Test server module for API testing.
+This creates a simplified server without the lifespan context manager for testing.
+"""
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-import yaml
 import logging
-import asyncio
-from contextlib import asynccontextmanager
 
-# Configure logging first
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-try:
-    from aiq.runtime import AIQRuntime
-    from aiq.config import Config
-    AIQ_AVAILABLE = True
-except ImportError:
-    from grid_core.runtime_fallback import AIQRuntime, Config
-    AIQ_AVAILABLE = False
-    logger.info("AIQ toolkit not available, using fallback runtime")
+# Import our fallback runtime directly
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
+from grid_core.runtime_fallback import AIQRuntime, Config
 
-# Global runtime instance
-runtime = None
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Application lifespan manager for startup/shutdown."""
-    global runtime
-    
-    # Startup
-    logger.info("Starting Grid Optimization Server...")
-    try:
-        # Load configuration
-        config = Config.from_file("test/workflow.yml")
-        
-        # Initialize AIQ Runtime
-        runtime = AIQRuntime(config)
-        await runtime.initialize()
-        
-        logger.info("Grid Optimization Server started successfully")
-    except Exception as e:
-        logger.error(f"Failed to start server: {e}")
-        raise
-    
-    yield
-    
-    # Shutdown
-    logger.info("Shutting down Grid Optimization Server...")
-    if runtime:
-        await runtime.shutdown()
-    logger.info("Server shutdown complete")
-
-# Initialize FastAPI app with lifespan manager
+# Create a simple app without lifespan for testing
 app = FastAPI(
-    title="Grid Optimization API",
-    description="AI-powered grid optimization using NeMo Agent Toolkit",
-    version="1.0.0",
-    lifespan=lifespan
+    title="Grid Optimization API (Test)",
+    description="Test version of AI-powered grid optimization API",
+    version="1.0.0-test"
 )
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure as needed for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize runtime synchronously for testing
+config = Config.from_file("test/workflow.yml")
+runtime = AIQRuntime(config)
+
+# For testing, we'll initialize the runtime immediately
+import asyncio
+
+async def init_runtime():
+    await runtime.initialize()
+
+# Try to initialize runtime
+try:
+    loop = asyncio.get_event_loop()
+    if loop.is_running():
+        # If loop is already running, create a task
+        asyncio.create_task(init_runtime())
+    else:
+        # If no loop is running, run it
+        loop.run_until_complete(init_runtime())
+except Exception as e:
+    logger.warning(f"Could not initialize runtime: {e}")
 
 # Request/Response Models
 class GridOptimizationRequest(BaseModel):
@@ -81,21 +67,9 @@ class GridOptimizationResponse(BaseModel):
     success: bool
     metadata: Optional[dict] = None
 
-@app.get("/")
-async def root():
-    return {"message": "Grid Optimization API", "docs": "/docs", "health": "/health"}
-
 @app.post("/ask", response_model=GridOptimizationResponse)
 async def ask_grid_agent(request: GridOptimizationRequest):
-    """
-    Process grid optimization requests through the AI agent.
-    
-    Args:
-        request: Grid optimization request containing user input and optional region
-        
-    Returns:
-        GridOptimizationResponse: Agent response with optimization results
-    """
+    """Process grid optimization requests through the AI agent."""
     try:
         if not runtime:
             raise HTTPException(status_code=503, detail="Runtime not initialized")
@@ -139,10 +113,10 @@ async def health_check():
     return {
         "status": "healthy",
         "runtime_initialized": runtime is not None,
-        "version": "1.0.0"
+        "version": "1.0.0-test"
     }
 
-@app.get("/metrics") 
+@app.get("/metrics")
 async def metrics():
     """Basic metrics endpoint."""
     if not runtime:
@@ -151,10 +125,9 @@ async def metrics():
     return {
         "runtime_status": "active",
         "agents_loaded": len(runtime.agents) if hasattr(runtime, 'agents') else 0,
-        "uptime": "active"  # Add actual uptime tracking if needed
+        "uptime": "active"
     }
 
-# Additional endpoints for grid-specific operations
 @app.post("/optimize/{region}")
 async def optimize_region(region: str):
     """Directly optimize a specific grid region."""
@@ -202,28 +175,3 @@ async def get_region_status(region: str):
     except Exception as e:
         logger.error(f"Error getting status for region {region}: {e}")
         raise HTTPException(status_code=500, detail=f"Status error: {str(e)}")
-
-if __name__ == "__main__":
-    import uvicorn
-    
-    # Load app config
-    try:
-        with open("config.yml", "r") as f:
-            config = yaml.safe_load(f)
-        
-        host = config.get("api", {}).get("host", "0.0.0.0")
-        port = config.get("api", {}).get("port", 8000)
-        
-    except Exception as e:
-        logger.warning(f"Could not load config: {e}. Using defaults.")
-        host = "0.0.0.0" 
-        port = 8000
-    
-    logger.info(f"Starting server on {host}:{port}")
-    uvicorn.run(
-        "server:app",
-        host=host,
-        port=port,
-        reload=True,
-        log_level="info"
-    )

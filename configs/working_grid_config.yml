@@ -1,0 +1,36 @@
+# Working Grid Optimization Configuration
+# Uses code execution to run grid optimization
+
+general:
+  use_uvloop: true
+
+# LLM configuration
+llms:
+  grid_llm:
+    _type: openai
+    model_name: gpt-4o-mini
+    temperature: 0.1
+    max_tokens: 2048
+
+# Available functions
+functions:
+  current_datetime:
+    _type: current_datetime
+  code_execution:
+    _type: code_execution
+
+# Main workflow
+workflow:
+  _type: react_agent
+  tool_names:
+    - code_execution
+    - current_datetime
+  llm_name: grid_llm
+  verbose: true
+  system_message: |
+    You are a grid optimization assistant. You can optimize power grids using Python code execution.
+    
+    To optimize a grid for a region, execute Python code to import and run the grid optimization functions.
+    The grid optimization modules are located at /Users/hydrogeo/Downloads/Grid_Optmize/src.
+    
+    Available regions: us-west, us-east, us-central, pgae

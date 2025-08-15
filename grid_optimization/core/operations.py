@@ -5,7 +5,7 @@ This module provides the core optimization algorithms for the grid optimization 
 including supply optimization and result storage functionality.
 """
 
-from .db import get_engine, get_session, GridState, OptimizationResult
+from .database import get_engine, get_session, GridState, OptimizationResult
 from scipy.optimize import minimize
 
 

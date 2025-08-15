@@ -1,0 +1,65 @@
+# Full-Featured AIQ Configuration for Grid Optimization
+# Advanced setup with multiple LLMs and comprehensive features
+
+general:
+  use_uvloop: true
+
+# Multiple LLM configurations for different use cases
+llms:
+  # Primary LLM for grid optimization tasks
+  grid_llm:
+    _type: openai
+    model_name: gpt-4o
+    max_tokens: 4096
+    temperature: 0.1
+    
+  # Backup LLM for fallback scenarios
+  backup_llm:
+    _type: openai
+    model_name: gpt-4o-mini
+    max_tokens: 2048
+    temperature: 0.1
+    
+  # NVIDIA NIM LLM option (requires NVIDIA API key)
+  nim_llm:
+    _type: nim
+    model_name: meta/llama-3.1-70b-instruct
+    temperature: 0.0
+    max_tokens: 2048
+
+# Available functions
+functions:
+  current_datetime:
+    _type: current_datetime
+    description: "Get current date and time for grid optimization timestamping"
+  optimize_grid:
+    _type: nat_toolkit/optimize_grid
+    description: "Optimize power grid for specified region"
+  show_last_optimization:
+    _type: nat_toolkit/show_last_optimization
+    description: "Display latest optimization results for a region"
+
+# Main workflow with comprehensive capabilities
+workflow:
+  _type: react_agent
+  tool_names:
+    - optimize_grid
+    - show_last_optimization
+    - current_datetime
+  llm_name: grid_llm
+  verbose: true
+  system_message: |
+    You are an advanced grid optimization assistant with comprehensive capabilities. You can:
+    
+    1. Optimize power grids for different regions using optimize_grid
+    2. Display latest optimization results using show_last_optimization
+    3. Provide detailed analysis and recommendations
+    4. Monitor grid performance and alert on issues
+    
+    Available regions: us-west, us-east, us-central, pgae
+    
+    You have access to real-time data and can perform complex optimization
+    calculations to minimize power losses and maximize grid efficiency.
+    
+    Always provide clear, actionable insights and explain the reasoning
+    behind optimization recommendations.

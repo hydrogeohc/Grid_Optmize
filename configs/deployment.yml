@@ -1,0 +1,50 @@
+# Deployment Configuration
+# Settings for different deployment environments
+
+development:
+  database:
+    type: "sqlite"
+    path: "gridopt.db"
+    echo: true
+  api:
+    host: "127.0.0.1"
+    port: 8000
+    debug: true
+    reload: true
+  logging:
+    level: "DEBUG"
+    
+staging:
+  database:
+    type: "postgresql"
+    host: "staging-db.example.com"
+    port: 5432
+    name: "grid_optimization_staging"
+    echo: false
+  api:
+    host: "0.0.0.0"
+    port: 8000
+    debug: false
+    reload: false
+  logging:
+    level: "INFO"
+    
+production:
+  database:
+    type: "postgresql"
+    host: "prod-db.example.com"
+    port: 5432
+    name: "grid_optimization"
+    echo: false
+  api:
+    host: "0.0.0.0"
+    port: 8000
+    debug: false
+    reload: false
+  logging:
+    level: "WARNING"
+  security:
+    enable_guardrails: true
+    encryption:
+      algorithm: "AES-256"
+      key_rotation_days: 90

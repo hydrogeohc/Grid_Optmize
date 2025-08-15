@@ -1,0 +1,30 @@
+# Fixed Grid Optimization Configuration  
+# Uses tool calling agent without LLM dependency issues
+
+general:
+  use_uvloop: true
+
+# Available functions
+functions:
+  current_datetime:
+    _type: current_datetime
+  optimize_grid:
+    _type: nat_toolkit/optimize_grid
+  show_last_optimization:
+    _type: nat_toolkit/show_last_optimization
+
+# Main workflow
+workflow:
+  _type: tool_calling_agent
+  tool_names:
+    - optimize_grid
+    - show_last_optimization
+    - current_datetime
+  verbose: true
+  system_message: |
+    You are a grid optimization assistant. You can:
+    1. Optimize grid supply for any region using optimize_grid
+    2. Show the latest optimization results using show_last_optimization
+    3. Provide analysis and recommendations
+    
+    Available regions: us-west, us-east, us-central, pgae

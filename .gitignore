@@ -107,3 +107,5 @@ sandbox/
 data/raw/
 data/processed/
 models/
+
+*.env

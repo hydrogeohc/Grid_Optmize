@@ -1,0 +1,72 @@
+
+# Grid Optimization Application Configuration
+app:
+  name: "Grid Optimization System"
+  version: "1.0.0"
+  description: "AI-powered grid optimization using NeMo Agent Toolkit"
+
+# Environment Configuration
+environment:
+  mode: "development"  # development, staging, production
+  debug: true
+  log_level: "INFO"
+
+# Database Configuration
+database:
+  type: "sqlite"
+  path: "gridopt.db"
+  echo: false  # Set to true for SQL query logging
+
+# Security Configuration  
+security:
+  enable_guardrails: true
+  secret_manager: "google-cloud-secret-manager"
+  encryption:
+    algorithm: "AES-256"
+    key_rotation_days: 90
+
+# Grid Operation Settings
+grid:
+  default_region: "us-west"
+  optimization:
+    algorithm: "scipy-minimize"
+    max_iterations: 100
+    tolerance: 1e-6
+  monitoring:
+    poll_interval_seconds: 30
+    alert_thresholds:
+      high_loss_percentage: 10.0
+      supply_demand_imbalance: 5.0
+
+# Agent Toolkit Configuration
+aiq:
+  runtime:
+    max_concurrent_agents: 3
+    timeout_seconds: 300
+  
+  # Import paths for custom components
+  imports:
+    - "grid_ops.agents"
+    - "grid_ops.tools"
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["*"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+
+# Observability and Monitoring
+observability:
+  enable_metrics: true
+  enable_tracing: true  
+  metrics_endpoint: "/metrics"
+  health_endpoint: "/health"
+  
+# File Paths
+paths:
+  data_directory: "data/"
+  logs_directory: "logs/"
+  temp_directory: "temp/"
