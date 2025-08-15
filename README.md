@@ -13,7 +13,7 @@ A **professional AI-powered grid optimization platform** with **NVIDIA NeMo Agen
 ## ✨ Key Features
 
 - 🔋 **Real-time Grid Optimization**: SciPy-based algorithms for power supply/demand balancing
-- 🌍 **Multi-Region Support**: US-West, US-East, US-Central, and PG&E regions
+- 🌍 **Multi-Region Support**: US-West, US-East, and US-Central regions
 - 🤖 **NAT Integration**: NVIDIA NeMo Agent Toolkit for AI-powered operations  
 - 🚀 **High Performance**: Sub-millisecond optimization times
 - 📊 **Professional API**: FastAPI-based REST endpoints with async support
